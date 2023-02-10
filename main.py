@@ -12,11 +12,15 @@ def get_random_position(): return [randrange(*RANGE), randrange(*RANGE)]
 
 snake = pg.rect.Rect([0, 0, TILE_SIZE - 2, TILE_SIZE - 2])
 snake.center = get_random_position()
+# init length of snake
 length = 1
 segments = [snake.copy()]
 snake_dir = (0, 0)
 # time step is delay between snake moves in msecs
 time, time_step = 0, 110
+# var for food , food will be copy of snake head, once positions match move food to random tile
+food = snake.copy()
+food.center = get_random_position()
 screen = pg.display.set_mode([WINDOW] * 2)
 # instance of clock class to set frame rate
 clock = pg.time.Clock()
@@ -38,6 +42,12 @@ while True:
             if event.key == pg.K_d:
                 snake_dir = (TILE_SIZE, 0)
     screen.fill('black')
+    # check food
+    if snake.center == food.center:
+        food.center = get_random_position()
+        length += 1
+    # draw food
+    pg.draw.rect(screen, 'red', food)
     # draw snake
     [pg.draw.rect(screen, 'green', segment) for segment in segments]
     # move snake in place
