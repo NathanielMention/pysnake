@@ -2,7 +2,7 @@ import pygame as pg
 from random import randrange
 
 # create window/screen for game to show up on
-WINDOW = 1000
+WINDOW = 780
 # since game is in form of grid break into tiles
 TILE_SIZE = 50
 # tuple that defines range for rand coordinates
@@ -42,6 +42,12 @@ while True:
             if event.key == pg.K_d:
                 snake_dir = (TILE_SIZE, 0)
     screen.fill('black')
+    # check borders and selfeating
+    self_eating = pg.Rect.collidelist(snake, segments[:-1]) != -1
+    if snake.left < 0 or snake.right > WINDOW or snake.top < 0 or snake.bottom > WINDOW or self_eating:
+        snake.center, food.center = get_random_position(), get_random_position()
+        length, snake_dir = 1, (0, 0)
+        segments = [snake.copy()]
     # check food
     if snake.center == food.center:
         food.center = get_random_position()
