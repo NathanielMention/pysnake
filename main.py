@@ -15,6 +15,8 @@ snake.center = get_random_position()
 length = 1
 segments = [snake.copy()]
 snake_dir = (0, 0)
+# time step is delay between snake moves in msecs
+time, time_step = 0, 110
 screen = pg.display.set_mode([WINDOW] * 2)
 # instance of clock class to set frame rate
 clock = pg.time.Clock()
@@ -38,5 +40,12 @@ while True:
     screen.fill('black')
     # draw snake
     [pg.draw.rect(screen, 'green', segment) for segment in segments]
-    pg.display.flip()
+    # move snake in place
+    time_now = pg.time.get_ticks()
+    if time_now - time > time_step:
+        time = time_now
+        snake.move_ip(snake_dir)
+        segments.append(snake.copy())
+        segments = segments[-length:]
+        pg.display.flip()
     clock.tick(60)
